@@ -4,7 +4,7 @@ title: "Welcome to My Data Science Portfolio"
 
 # Hello! I'm Jeremy 👋
 
-Welcome to my data science portfolio! This site shows my journey learning data science and analytics. Here you'll find projects that demonstrate what I've learned and discovered.
+Welcome to my data science portfolio! This is where I will post interesting projects that I am currently or have previously worked on. You will be able to see some highlights from the data analysis I have done both as part of class projects and from personal projects. I love sports analytics, so the majority of my projects will probably be baseball or football related. I will be updating this page regularly as I continue to refine my data science related skills, so maek sure to check in regularly to see what I'm working on. Check out the about me page to get to know me and see more of my background.
 
 ## 🎓 About This Portfolio
 
