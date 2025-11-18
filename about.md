@@ -39,7 +39,7 @@ In the short term, I hope to become more proficient with the data analysis proce
 
 ## Get to Know Me
 
-I love to work with kids, in the past I have worked as a substitute teacher and volunteered my time
+I love to work with kids, in the past I have worked as a substitute teacher and volunteered my time at local elementary schools. I also love to travel, although I do not frequently have the opportunity to due to the costs associated with being a student. I have been able to combine these passions in a meaningful way by volunteering in Mexico, the Dominican Republic, and Taiwan
 
 ## Contact
 
