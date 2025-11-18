@@ -6,10 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Your Name">
-<meta name="dcterms.date" content="2025-01-01">
+<meta name="author" content="Jeremy Abbott">
+<meta name="dcterms.date" content="2025-09-25">
 
-<title>EDA Project – Your Name - Data Science Portfolio</title>
+<title>Strikeouts Over Time: Plotting Pitcher Trends – Your Name - Data Science Portfolio</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -184,7 +184,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../projects/eda.html">EDA Project</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../projects/eda.html">Strikeouts Over Time: Plotting Pitcher Trends</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -209,7 +209,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../projects/eda.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">EDA Project</span></a>
+ <span class="menu-text">Strikeouts Over Time: Plotting Pitcher Trends</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -229,15 +229,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#strikeouts-over-time-plotting-pitcher-trends" id="toc-strikeouts-over-time-plotting-pitcher-trends" class="nav-link active" data-scroll-target="#strikeouts-over-time-plotting-pitcher-trends">Strikeouts Over Time: Plotting Pitcher Trends</a>
+  <ul class="collapse">
+  <li><a href="#getting-mlb-pitcher-data-into-pandas" id="toc-getting-mlb-pitcher-data-into-pandas" class="nav-link" data-scroll-target="#getting-mlb-pitcher-data-into-pandas">1. Getting MLB pitcher data into pandas</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">EDA Project</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">Strikeouts Over Time: Plotting Pitcher Trends</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -247,14 +256,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Your Name </p>
+             <p>Jeremy Abbott </p>
           </div>
   </div>
     
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">January 1, 2025</p>
+      <p class="date">September 25, 2025</p>
     </div>
   </div>
   
@@ -266,11 +275,168 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This is coming down the pipeline. Check again later.</p>
-
-
-<!-- -->
-
+<section id="strikeouts-over-time-plotting-pitcher-trends" class="level1">
+<h1>Strikeouts Over Time: Plotting Pitcher Trends</h1>
+<p>Baseball has a stat for everything, from the well known “batting average” to more obscure statistics such as “OPS”, “fWAR”, and “ERA+”. When all these different statistics are thrown together in a table, it can be hard to understand what exactly the jumble of numbers mean. In this tutorial, I will go through the process of turning raw data from a .csv file into interpretable charts where relationships between parameters of interest can be analyzed.</p>
+<p>By the end, you’ll be able to:</p>
+<ul>
+<li>Load a CSV of pitcher stats into pandas<br>
+</li>
+<li>Filter the data to a single pitcher<br>
+</li>
+<li>Summarize strikeouts by year<br>
+</li>
+<li>Plot a simple, readable line chart in matplotlib</li>
+</ul>
+<p>I will go through this process using recently retired Dodgers pitcher Clayton Kershaw, but you can pick any pitcher you’d like for this tutorial!</p>
+<hr>
+<section id="getting-mlb-pitcher-data-into-pandas" class="level2">
+<h2 class="anchored" data-anchor-id="getting-mlb-pitcher-data-into-pandas">1. Getting MLB pitcher data into pandas</h2>
+<p>The MLB makes a lot of their data avaliable through online tools like <a href="https://baseballsavant.mlb.com/statcast_search">MLB Baseball Savant (Statcast search)</a>. For this tutorial I would recommend using this same site, although there are others, such as BaseballReference.com and Sportsradar.com. To start out this project, we will:</p>
+<ol type="1">
+<li>Use a web interface (like Statcast search or another MLB stats page).<br>
+</li>
+<li>Filter for pitchers, under “included stats” check strikeouts and export the results as a CSV file.<br>
+</li>
+<li>Save it as something like <code>pitcher_stats.csv</code> in the same folder as your notebook/script.</li>
+</ol>
+<p>The CSV should include these three columns:</p>
+<ul>
+<li><code>player_name</code> – pitcher’s name<br>
+</li>
+<li><code>season</code> – year of the season (e.g., 2019, 2020, …)<br>
+</li>
+<li><code>so</code> – strikeouts</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in your downloaded MLB pitcher stats</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"pitcher_stats.csv"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Take a quick look at the columns and first few rows</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.columns)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You’ll want to pick your pitcher and filter the dataset to only include that pitcher. Here you’ll also want to sort the values by season.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Pick your pitcher</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>pitcher_name <span class="op">=</span> <span class="st">"Kershaw, Clayton"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Filter the dataset</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>pitcher_df <span class="op">=</span> df.query(<span class="st">"player_name == @pitcher_name"</span>).copy()</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Make sure season is sorted numerically</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>pitcher_df[<span class="st">"year"</span>] <span class="op">=</span> pitcher_df[<span class="st">"year"</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>pitcher_df <span class="op">=</span> pitcher_df.sort_values(<span class="st">"year"</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>:::{<span class="co">#quarto-navigation-envelope .hidden}</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>[Projects]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1zaWRlYmFyLXRpdGxl"</span>}</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>[Your Name <span class="op">-</span> Data Science Portfolio]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1uYXZiYXItdGl0bGU="</span>}</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>[Data Acquisition Project]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1uZXh0"</span>}</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>[Projects Overview]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1wcmV2"</span>}</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>[Projects Overview]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1zaWRlYmFyOi9wcm9qZWN0cy9pbmRleC5odG1sUHJvamVjdHMtT3ZlcnZpZXc="</span>}</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>[Strikeouts Over Time: Plotting Pitcher Trends]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1zaWRlYmFyOi9wcm9qZWN0cy9lZGEuaHRtbFN0cmlrZW91dHMtT3Zlci1UaW1lOi1QbG90dGluZy1QaXRjaGVyLVRyZW5kcw=="</span>}</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>[Data Acquisition Project]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1zaWRlYmFyOi9wcm9qZWN0cy9kYXRhLWFjcXVpc2l0aW9uLmh0bWxEYXRhLUFjcXVpc2l0aW9uLVByb2plY3Q="</span>}</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>[Final Project]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1zaWRlYmFyOi9wcm9qZWN0cy9maW5hbC1wcm9qZWN0Lmh0bWxGaW5hbC1Qcm9qZWN0"</span>}</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>[Home]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1uYXZiYXI6SG9tZQ=="</span>}</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>[<span class="op">/</span>index.html]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1uYXZiYXI6L2luZGV4Lmh0bWw="</span>}</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>[About Me]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1uYXZiYXI6QWJvdXQgTWU="</span>}</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>[<span class="op">/</span>about.html]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1uYXZiYXI6L2Fib3V0Lmh0bWw="</span>}</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>[Projects]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1uYXZiYXI6UHJvamVjdHM="</span>}</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>[All Projects]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1uYXZiYXI6QWxsIFByb2plY3Rz"</span>}</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>[<span class="op">/</span>projects<span class="op">/</span>index.html]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1uYXZiYXI6L3Byb2plY3RzL2luZGV4Lmh0bWw="</span>}</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>[<span class="op">---</span>]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1uYXZiYXI6LS0t"</span>}</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>[Exploratory Data Analysis]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1uYXZiYXI6RXhwbG9yYXRvcnkgRGF0YSBBbmFseXNpcw=="</span>}</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>[<span class="op">/</span>projects<span class="op">/</span>eda.html]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1uYXZiYXI6L3Byb2plY3RzL2VkYS5odG1s"</span>}</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>[Data Acquisition]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1uYXZiYXI6RGF0YSBBY3F1aXNpdGlvbg=="</span>}</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>[<span class="op">/</span>projects<span class="op">/</span>data<span class="op">-</span>acquisition.html]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1uYXZiYXI6L3Byb2plY3RzL2RhdGEtYWNxdWlzaXRpb24uaHRtbA=="</span>}</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>[Final Project]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1uYXZiYXI6RmluYWwgUHJvamVjdA=="</span>}</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>[<span class="op">/</span>projects<span class="op">/</span>final<span class="op">-</span>project.html]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1uYXZiYXI6L3Byb2plY3RzL2ZpbmFsLXByb2plY3QuaHRtbA=="</span>}</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>[https:<span class="op">//</span>github.com<span class="op">/</span>your<span class="op">-</span>username]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1uYXZiYXI6aHR0cHM6Ly9naXRodWIuY29tL3lvdXItdXNlcm5hbWU="</span>}</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>[https:<span class="op">//</span>linkedin.com<span class="op">/</span><span class="kw">in</span><span class="op">/</span>your<span class="op">-</span>profile]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWludC1uYXZiYXI6aHR0cHM6Ly9saW5rZWRpbi5jb20vaW4veW91ci1wcm9maWxl"</span>}</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>[Strikeouts Over Time: Plotting Pitcher Trends]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLWJyZWFkY3J1bWJzLVN0cmlrZW91dHMtT3Zlci1UaW1lOi1QbG90dGluZy1QaXRjaGVyLVRyZW5kcw=="</span>}</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>:::{<span class="co">#quarto-meta-markdown .hidden}</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>[Strikeouts Over Time: Plotting Pitcher Trends – Your Name <span class="op">-</span> Data Science Portfolio]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLW1ldGF0aXRsZQ=="</span>}</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>[Strikeouts Over Time: Plotting Pitcher Trends – Your Name <span class="op">-</span> Data Science Portfolio]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLXR3aXR0ZXJjYXJkdGl0bGU="</span>}</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>[Strikeouts Over Time: Plotting Pitcher Trends – Your Name <span class="op">-</span> Data Science Portfolio]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLW9nY2FyZHRpdGxl"</span>}</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>[Your Name <span class="op">-</span> Data Science Portfolio]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLW1ldGFzaXRlbmFtZQ=="</span>}</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>[A showcase of my data science projects <span class="kw">and</span> learning journey]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLXR3aXR0ZXJjYXJkZGVzYw=="</span>}</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>[A showcase of my data science projects <span class="kw">and</span> learning journey]{.hidden .quarto<span class="op">-</span>markdown<span class="op">-</span>envelope<span class="op">-</span>contents render<span class="op">-</span><span class="bu">id</span><span class="op">=</span><span class="st">"cXVhcnRvLW9nY2FyZGRkZXNj"</span>}</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;!--</span> <span class="op">--&gt;</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>::: {.quarto<span class="op">-</span>embedded<span class="op">-</span>source<span class="op">-</span>code}</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>```````````````````{.markdown shortcodes<span class="op">=</span><span class="st">"false"</span>}</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="op">---</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>title: <span class="st">"Strikeouts Over Time: Plotting Pitcher Trends"</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>author: <span class="st">"Jeremy Abbott"</span></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>date: <span class="st">"2025-09-25"</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a><span class="bu">format</span>:</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>  html:</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>    code<span class="op">-</span>fold: true</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>    toc: true</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a><span class="op">---</span></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Strikeouts Over Time: Plotting Pitcher Trends</span></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>Baseball has a stat <span class="cf">for</span> everything, <span class="im">from</span> the well known <span class="st">"batting average"</span> to more obscure statistics such <span class="im">as</span> <span class="st">"OPS"</span>, <span class="st">"fWAR"</span>, <span class="kw">and</span> <span class="st">"ERA+"</span>. When <span class="bu">all</span> these different statistics are thrown together <span class="kw">in</span> a table, it can be hard to understand what exactly the jumble of numbers mean. In this tutorial, I will go through the process of turning raw data <span class="im">from</span> a .csv <span class="bu">file</span> into interpretable charts where relationships between parameters of interest can be analyzed. </span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>By the end, you’ll be able to:</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Load a CSV of pitcher stats into pandas  </span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Filter the data to a single pitcher  </span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Summarize strikeouts by year  </span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> Plot a simple, readable line chart <span class="kw">in</span> matplotlib</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>I will go through this process using recently retired Dodgers pitcher Clayton Kershaw, but you can pick <span class="bu">any</span> pitcher you<span class="st">'d like for this tutorial!</span></span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a><span class="er">---</span></span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a><span class="er">## 1. Getting MLB pitcher data into pandas</span></span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>The MLB makes a lot of their data avaliable through online tools like [MLB Baseball Savant (Statcast search)](https:<span class="op">//</span>baseballsavant.mlb.com<span class="op">/</span>statcast_search). For this tutorial I would recommend using this same site, although there are others, such <span class="im">as</span> BaseballReference.com <span class="kw">and</span> Sportsradar.com. To start out this project, we will:</span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a><span class="fl">1.</span> Use a web interface (like Statcast search <span class="kw">or</span> another MLB stats page).  </span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a><span class="fl">2.</span> Filter <span class="cf">for</span> pitchers, under <span class="st">"included stats"</span> check strikeouts <span class="kw">and</span> export the results <span class="im">as</span> a CSV <span class="bu">file</span>.  </span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a><span class="fl">3.</span> Save it <span class="im">as</span> something like `pitcher_stats.csv` <span class="kw">in</span> the same folder <span class="im">as</span> your notebook<span class="op">/</span>script.</span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>The CSV should include these three columns: </span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> `player_name` – pitcher’s name  </span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> `season` – year of the season (e.g., <span class="dv">2019</span>, <span class="dv">2020</span>, …)  </span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> `so` – strikeouts</span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>```python</span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in your downloaded MLB pitcher stats</span></span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"pitcher_stats.csv"</span>)</span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a><span class="co"># Take a quick look at the columns and first few rows</span></span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.columns)</span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You’ll want to pick your pitcher and filter the dataset to only include that pitcher. Here you’ll also want to sort the values by season.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Pick your pitcher</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>pitcher_name <span class="op">=</span> <span class="st">"Kershaw, Clayton"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Filter the dataset</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>pitcher_df <span class="op">=</span> df.query(<span class="st">"player_name == @pitcher_name"</span>).copy()</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Make sure season is sorted numerically</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>pitcher_df[<span class="st">"year"</span>] <span class="op">=</span> pitcher_df[<span class="st">"year"</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>pitcher_df <span class="op">=</span> pitcher_df.sort_values(<span class="st">"year"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>:::</p>
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -723,19 +889,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       }
     }
   });
-  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "EDA Project"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Your Name"</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2025-01-01"</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>This is coming down the pipeline. Check again later.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
-</div></div></div></div></div>
+  </script>
 </div> <!-- /content -->
 
 

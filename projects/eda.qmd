@@ -1,11 +1,63 @@
 ---
-title: "EDA Project"
-author: "Your Name"
-date: "2025-01-01"
+title: "Strikeouts Over Time: Plotting Pitcher Trends"
+author: "Jeremy Abbott"
+date: "2025-09-25"
 format:
   html:
     code-fold: true
     toc: true
 ---
 
-This is coming down the pipeline. Check again later.
+# Strikeouts Over Time: Plotting Pitcher Trends
+
+Baseball has a stat for everything, from the well known "batting average" to more obscure statistics such as "OPS", "fWAR", and "ERA+". When all these different statistics are thrown together in a table, it can be hard to understand what exactly the jumble of numbers mean. In this tutorial, I will go through the process of turning raw data from a .csv file into interpretable charts where relationships between parameters of interest can be analyzed. 
+
+By the end, you’ll be able to:
+
+- Load a CSV of pitcher stats into pandas  
+- Filter the data to a single pitcher  
+- Summarize strikeouts by year  
+- Plot a simple, readable line chart in matplotlib
+
+I will go through this process using recently retired Dodgers pitcher Clayton Kershaw, but you can pick any pitcher you'd like for this tutorial!
+
+---
+
+## 1. Getting MLB pitcher data into pandas
+
+The MLB makes a lot of their data avaliable through online tools like [MLB Baseball Savant (Statcast search)](https://baseballsavant.mlb.com/statcast_search). For this tutorial I would recommend using this same site, although there are others, such as BaseballReference.com and Sportsradar.com. To start out this project, we will:
+
+1. Use a web interface (like Statcast search or another MLB stats page).  
+2. Filter for pitchers, under "included stats" check strikeouts and export the results as a CSV file.  
+3. Save it as something like `pitcher_stats.csv` in the same folder as your notebook/script.
+
+The CSV should include these three columns: 
+
+- `player_name` – pitcher’s name  
+- `season` – year of the season (e.g., 2019, 2020, …)  
+- `so` – strikeouts
+
+
+```python
+import pandas as pd
+
+# Read in your downloaded MLB pitcher stats
+df = pd.read_csv("pitcher_stats.csv")
+
+# Take a quick look at the columns and first few rows
+print(df.columns)
+df.head()
+```
+
+You'll want to pick your pitcher and filter the dataset to only include that pitcher. Here you'll also want to sort the values by season.
+
+```python
+#Pick your pitcher
+pitcher_name = "Kershaw, Clayton"
+
+#Filter the dataset
+pitcher_df = df.query("player_name == @pitcher_name").copy()
+
+# Make sure season is sorted numerically
+pitcher_df["year"] = pitcher_df["year"].astype(int)
+pitcher_df = pitcher_df.sort_values("year")
