@@ -31,10 +31,10 @@ The MLB makes a lot of their data avaliable through online tools like [MLB Baseb
 2. Filter for pitchers, under "included stats" check strikeouts and export the results as a CSV file.  
 3. Save it as something like `pitcher_stats.csv` in the same folder as your notebook/script.
 
-The CSV should include these three columns: 
+The CSV will have many columns, but should at least include these three columns: 
 
 - `player_name` – pitcher’s name  
-- `season` – year of the season (e.g., 2019, 2020, …)  
+- `year` – year of the season (e.g., 2019, 2020, …)  
 - `so` – strikeouts
 
 
@@ -61,3 +61,4 @@ pitcher_df = df.query("player_name == @pitcher_name").copy()
 # Make sure season is sorted numerically
 pitcher_df["year"] = pitcher_df["year"].astype(int)
 pitcher_df = pitcher_df.sort_values("year")
+```
