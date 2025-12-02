@@ -60,7 +60,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -105,6 +105,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="../styles.css">
@@ -237,6 +240,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#strikeouts-over-time-plotting-pitcher-trends" id="toc-strikeouts-over-time-plotting-pitcher-trends" class="nav-link active" data-scroll-target="#strikeouts-over-time-plotting-pitcher-trends">Strikeouts Over Time: Plotting Pitcher Trends</a>
   <ul class="collapse">
   <li><a href="#getting-mlb-pitcher-data-into-pandas" id="toc-getting-mlb-pitcher-data-into-pandas" class="nav-link" data-scroll-target="#getting-mlb-pitcher-data-into-pandas">1. Getting MLB pitcher data into pandas</a></li>
+  <li><a href="#clean-data-and-select-pitcher" id="toc-clean-data-and-select-pitcher" class="nav-link" data-scroll-target="#clean-data-and-select-pitcher">2. Clean data and select pitcher</a></li>
+  <li><a href="#plot-strikeouts-by-season-using-matplotlib" id="toc-plot-strikeouts-by-season-using-matplotlib" class="nav-link" data-scroll-target="#plot-strikeouts-by-season-using-matplotlib">3. Plot strikeouts by season using matplotlib</a></li>
+  <li><a href="#interpreting-the-plot" id="toc-interpreting-the-plot" class="nav-link" data-scroll-target="#interpreting-the-plot">4. Interpreting the plot</a></li>
+  <li><a href="#your-turn-pick-your-pitcher-and-stat" id="toc-your-turn-pick-your-pitcher-and-stat" class="nav-link" data-scroll-target="#your-turn-pick-your-pitcher-and-stat">5. Your turn! Pick your pitcher and stat</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -308,16 +315,180 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
 <li><code>so</code> – strikeouts</li>
 </ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<div id="7327785b" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in your downloaded MLB pitcher stats</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"pitcher_stats.csv"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"../pitcher_stats.csv"</span>)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Take a quick look at the columns and first few rows</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.columns)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#print(df.columns) (Uncomment this line to check the column names!)</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">pitches</th>
+<th data-quarto-table-cell-role="th">player_id</th>
+<th data-quarto-table-cell-role="th">player_name</th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">total_pitches</th>
+<th data-quarto-table-cell-role="th">pitch_percent</th>
+<th data-quarto-table-cell-role="th">ba</th>
+<th data-quarto-table-cell-role="th">iso</th>
+<th data-quarto-table-cell-role="th">babip</th>
+<th data-quarto-table-cell-role="th">slg</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">xslgdiff</th>
+<th data-quarto-table-cell-role="th">wobadiff</th>
+<th data-quarto-table-cell-role="th">swing_miss_percent</th>
+<th data-quarto-table-cell-role="th">arm_angle</th>
+<th data-quarto-table-cell-role="th">attack_angle</th>
+<th data-quarto-table-cell-role="th">attack_direction</th>
+<th data-quarto-table-cell-role="th">swing_path_tilt</th>
+<th data-quarto-table-cell-role="th">rate_ideal_attack_angle</th>
+<th data-quarto-table-cell-role="th">intercept_ball_minus_batter_pos_x_inches</th>
+<th data-quarto-table-cell-role="th">intercept_ball_minus_batter_pos_y_inches</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>3282</td>
+<td>657277</td>
+<td>Webb, Logan</td>
+<td>2025</td>
+<td>3282</td>
+<td>100.0</td>
+<td>0.264</td>
+<td>0.122</td>
+<td>0.349</td>
+<td>0.386</td>
+<td>...</td>
+<td>0.010</td>
+<td>0.009</td>
+<td>24.7</td>
+<td>22.1</td>
+<td>6.707878</td>
+<td>4.001445</td>
+<td>33.708467</td>
+<td>0.447011</td>
+<td>37.166778</td>
+<td>27.691825</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>3281</td>
+<td>543037</td>
+<td>Cole, Gerrit</td>
+<td>2023</td>
+<td>3286</td>
+<td>99.8</td>
+<td>0.206</td>
+<td>0.116</td>
+<td>0.263</td>
+<td>0.322</td>
+<td>...</td>
+<td>-0.056</td>
+<td>-0.033</td>
+<td>26.2</td>
+<td>42.1</td>
+<td>8.474908</td>
+<td>0.982880</td>
+<td>30.455157</td>
+<td>0.509887</td>
+<td>38.013593</td>
+<td>28.368005</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>3274</td>
+<td>669203</td>
+<td>Burnes, Corbin</td>
+<td>2022</td>
+<td>3274</td>
+<td>100.0</td>
+<td>0.197</td>
+<td>0.144</td>
+<td>0.259</td>
+<td>0.341</td>
+<td>...</td>
+<td>0.005</td>
+<td>-0.006</td>
+<td>35.2</td>
+<td>41.3</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>3274</td>
+<td>543037</td>
+<td>Cole, Gerrit</td>
+<td>2022</td>
+<td>3274</td>
+<td>100.0</td>
+<td>0.209</td>
+<td>0.182</td>
+<td>0.269</td>
+<td>0.390</td>
+<td>...</td>
+<td>0.007</td>
+<td>-0.001</td>
+<td>34.1</td>
+<td>39.8</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>3262</td>
+<td>656302</td>
+<td>Cease, Dylan</td>
+<td>2023</td>
+<td>3268</td>
+<td>99.8</td>
+<td>0.250</td>
+<td>0.155</td>
+<td>0.331</td>
+<td>0.405</td>
+<td>...</td>
+<td>0.024</td>
+<td>0.009</td>
+<td>31.0</td>
+<td>53.4</td>
+<td>10.736713</td>
+<td>-2.959811</td>
+<td>33.194060</td>
+<td>0.492823</td>
+<td>36.381789</td>
+<td>31.187335</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 77 columns</p>
+</div>
+</div>
+</div>
+</section>
+<section id="clean-data-and-select-pitcher" class="level2">
+<h2 class="anchored" data-anchor-id="clean-data-and-select-pitcher">2. Clean data and select pitcher</h2>
 <p>You’ll want to pick your pitcher and filter the dataset to only include that pitcher. Here you’ll also want to sort the values by season.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Pick your pitcher</span></span>
+<div id="8b5b6d3f" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Pick your pitcher</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>pitcher_name <span class="op">=</span> <span class="st">"Kershaw, Clayton"</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Filter the dataset</span></span>
@@ -326,6 +497,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Make sure season is sorted numerically</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>pitcher_df[<span class="st">"year"</span>] <span class="op">=</span> pitcher_df[<span class="st">"year"</span>].astype(<span class="bu">int</span>)</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>pitcher_df <span class="op">=</span> pitcher_df.sort_values(<span class="st">"year"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="plot-strikeouts-by-season-using-matplotlib" class="level2">
+<h2 class="anchored" data-anchor-id="plot-strikeouts-by-season-using-matplotlib">3. Plot strikeouts by season using matplotlib</h2>
+<p>Now that the dataset looks how we want it to, we can start visualizing it on a plot. We will use the matplotlib library to do this.</p>
+<div id="6ad4e0f3" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize <span class="op">=</span> (<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Here we create the plot by assigning season to the x-axis and strikeouts to the y-axis.</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>ax.plot(</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  pitcher_df[<span class="st">"year"</span>],</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  pitcher_df[<span class="st">"so"</span>],</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  marker <span class="op">=</span> <span class="st">"o"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  linestyle <span class="op">=</span> <span class="st">"-"</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#It's important to set labels for our plot as many times variable names are not easily recognizable.</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>ax.set_xticks(pitcher_df[<span class="st">"year"</span>])</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="ss">f"Strikeouts per Season for </span><span class="sc">{</span>pitcher_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Season"</span>)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Total Strikeouts"</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eda_files/figure-html/cell-4-output-1.png" width="758" height="470" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="interpreting-the-plot" class="level2">
+<h2 class="anchored" data-anchor-id="interpreting-the-plot">4. Interpreting the plot</h2>
+<p>Depending on which pitcher you have chosen, you might have different things stick out to you. For example:</p>
+<ul>
+<li>Is there a season where the strikeout count jumps up or falls sharply?</li>
+<li>Is your pitcher consistent or did they just have one breakout season?</li>
+<li>Is your pitcher trending up or down over time?</li>
+</ul>
+<p>After seeing the trends in your data, you can explore even further. Another statistic that is frequently used is K/9, which refers to the number of strikeouts per 9 innings. This can be more accurate to a pitchers actual ability as it can account for time spent injured or not playing as a starter. By modifying the code above, it can be a simple change to create a new column with values obtained by dividing the strikeouts by the innings pitched, then multiplying by 9.</p>
+</section>
+<section id="your-turn-pick-your-pitcher-and-stat" class="level2">
+<h2 class="anchored" data-anchor-id="your-turn-pick-your-pitcher-and-stat">5. Your turn! Pick your pitcher and stat</h2>
+<p>Now that you’ve seen me go through this process for Clayton Kershaw, you can take this code and make your own plot using any pitcher and any statistic. This code can be copied and pasted directly into a python script and run to create your own custom stat-over-time plot.</p>
+<p>When you’re finished, you should have a working python script, a simple, clean line plot using real MLB data, and a starting point for deeper sports analytics projects. The basic flow taught here, load in data -&gt; filter -&gt; group by desired stat -&gt; plot data, can be used as a starting point for almost any dataset to visualize data. Good luck!</p>
 
 
 <!-- -->
@@ -785,70 +1004,114 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Strikeouts Over Time: Plotting Pitcher Trends"</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Jeremy Abbott"</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2025-09-25"</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu"># Strikeouts Over Time: Plotting Pitcher Trends</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>Baseball has a stat for everything, from the well known "batting average" to more obscure statistics such as "OPS", "fWAR", and "ERA+". When all these different statistics are thrown together in a table, it can be hard to understand what exactly the jumble of numbers mean. In this tutorial, I will go through the process of turning raw data from a .csv file into interpretable charts where relationships between parameters of interest can be analyzed. </span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>By the end, you’ll be able to:</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Load a CSV of pitcher stats into pandas  </span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Filter the data to a single pitcher  </span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Summarize strikeouts by year  </span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Plot a simple, readable line chart in matplotlib</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>I will go through this process using recently retired Dodgers pitcher Clayton Kershaw, but you can pick any pitcher you'd like for this tutorial!</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="fu">## 1. Getting MLB pitcher data into pandas</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>The MLB makes a lot of their data avaliable through online tools like <span class="co">[</span><span class="ot">MLB Baseball Savant (Statcast search)</span><span class="co">](https://baseballsavant.mlb.com/statcast_search)</span>. For this tutorial I would recommend using this same site, although there are others, such as BaseballReference.com and Sportsradar.com. To start out this project, we will:</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Use a web interface (like Statcast search or another MLB stats page).  </span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Filter for pitchers, under "included stats" check strikeouts and export the results as a CSV file.  </span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Save it as something like <span class="in">`pitcher_stats.csv`</span> in the same folder as your notebook/script.</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>The CSV will have many columns, but should at least include these three columns: </span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`player_name`</span> – pitcher’s name  </span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`year`</span> – year of the season (e.g., 2019, 2020, …)  </span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`so`</span> – strikeouts</span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in your downloaded MLB pitcher stats</span></span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"pitcher_stats.csv"</span>)</span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Take a quick look at the columns and first few rows</span></span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.columns)</span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>df.head()</span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>You'll want to pick your pitcher and filter the dataset to only include that pitcher. Here you'll also want to sort the values by season.</span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
-<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a><span class="co">#Pick your pitcher</span></span>
-<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>pitcher_name <span class="op">=</span> <span class="st">"Kershaw, Clayton"</span></span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="co">#Filter the dataset</span></span>
-<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>pitcher_df <span class="op">=</span> df.query(<span class="st">"player_name == @pitcher_name"</span>).copy()</span>
-<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a><span class="co"># Make sure season is sorted numerically</span></span>
-<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>pitcher_df[<span class="st">"year"</span>] <span class="op">=</span> pitcher_df[<span class="st">"year"</span>].astype(<span class="bu">int</span>)</span>
-<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>pitcher_df <span class="op">=</span> pitcher_df.sort_values(<span class="st">"year"</span>)</span>
-<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Strikeouts Over Time: Plotting Pitcher Trends"</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Jeremy Abbott"</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2025-09-25"</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: false</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu"># Strikeouts Over Time: Plotting Pitcher Trends</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>Baseball has a stat for everything, from the well known "batting average" to more obscure statistics such as "OPS", "fWAR", and "ERA+". When all these different statistics are thrown together in a table, it can be hard to understand what exactly the jumble of numbers mean. In this tutorial, I will go through the process of turning raw data from a .csv file into interpretable charts where relationships between parameters of interest can be analyzed. </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>By the end, you’ll be able to:</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Load a CSV of pitcher stats into pandas  </span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Filter the data to a single pitcher  </span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Summarize strikeouts by year  </span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Plot a simple, readable line chart in matplotlib</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>I will go through this process using recently retired Dodgers pitcher Clayton Kershaw, but you can pick any pitcher you'd like for this tutorial!</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="fu">## 1. Getting MLB pitcher data into pandas</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>The MLB makes a lot of their data avaliable through online tools like <span class="co">[</span><span class="ot">MLB Baseball Savant (Statcast search)</span><span class="co">](https://baseballsavant.mlb.com/statcast_search)</span>. For this tutorial I would recommend using this same site, although there are others, such as BaseballReference.com and Sportsradar.com. To start out this project, we will:</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Use a web interface (like Statcast search or another MLB stats page).  </span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Filter for pitchers, under "included stats" check strikeouts and export the results as a CSV file.  </span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Save it as something like <span class="in">`pitcher_stats.csv`</span> in the same folder as your notebook/script.</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>The CSV will have many columns, but should at least include these three columns: </span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`player_name`</span> – pitcher’s name  </span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`year`</span> – year of the season (e.g., 2019, 2020, …)  </span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`so`</span> – strikeouts</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in your downloaded MLB pitcher stats</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"../pitcher_stats.csv"</span>)</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="co"># Take a quick look at the columns and first few rows</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="co">#print(df.columns) (Uncomment this line to check the column names!)</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>df.head()</span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2. Clean data and select pitcher</span></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>You'll want to pick your pitcher and filter the dataset to only include that pitcher. Here you'll also want to sort the values by season.</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a><span class="co">#Pick your pitcher</span></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>pitcher_name <span class="op">=</span> <span class="st">"Kershaw, Clayton"</span></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a><span class="co">#Filter the dataset</span></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>pitcher_df <span class="op">=</span> df.query(<span class="st">"player_name == @pitcher_name"</span>).copy()</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a><span class="co"># Make sure season is sorted numerically</span></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>pitcher_df[<span class="st">"year"</span>] <span class="op">=</span> pitcher_df[<span class="st">"year"</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>pitcher_df <span class="op">=</span> pitcher_df.sort_values(<span class="st">"year"</span>)</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a><span class="fu">## 3. Plot strikeouts by season using matplotlib</span></span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>Now that the dataset looks how we want it to, we can start visualizing it on a plot. We will use the matplotlib library to do this. </span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize <span class="op">=</span> (<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a><span class="co">#Here we create the plot by assigning season to the x-axis and strikeouts to the y-axis.</span></span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>ax.plot(</span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a>  pitcher_df[<span class="st">"year"</span>],</span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>  pitcher_df[<span class="st">"so"</span>],</span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a>  marker <span class="op">=</span> <span class="st">"o"</span>,</span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a>  linestyle <span class="op">=</span> <span class="st">"-"</span></span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a><span class="co">#It's important to set labels for our plot as many times variable names are not easily recognizable.</span></span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>ax.set_xticks(pitcher_df[<span class="st">"year"</span>])</span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="ss">f"Strikeouts per Season for </span><span class="sc">{</span>pitcher_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Season"</span>)</span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Total Strikeouts"</span>)</span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a><span class="fu">## 4. Interpreting the plot</span></span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a>Depending on which pitcher you have chosen, you might have different things stick out to you. For example:</span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Is there a season where the strikeout count jumps up or falls sharply?</span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Is your pitcher consistent or did they just have one breakout season?</span>
+<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Is your pitcher trending up or down over time?</span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a>After seeing the trends in your data, you can explore even further. Another statistic that is frequently used is K/9, which refers to the number of strikeouts per 9 innings. This can be more accurate to a pitchers actual ability as it can account for time spent injured or not playing as a starter. By modifying the code above, it can be a simple change to create a new column with values obtained by dividing the strikeouts by the innings pitched, then multiplying by 9.</span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a><span class="fu">## 5. Your turn! Pick your pitcher and stat</span></span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a>Now that you've seen me go through this process for Clayton Kershaw, you can take this code and make your own plot using any pitcher and any statistic. This code can be copied and pasted directly into a python script and run to create your own custom stat-over-time plot.</span>
+<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a>When you're finished, you should have a working python script, a simple, clean line plot using real MLB data, and a starting point for deeper sports analytics projects. The basic flow taught here, load in data -&gt; filter -&gt; group by desired stat -&gt; plot data, can be used as a starting point for almost any dataset to visualize data. Good luck!</span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

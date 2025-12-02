@@ -4,7 +4,7 @@ author: "Jeremy Abbott"
 date: "2025-09-25"
 format:
   html:
-    code-fold: true
+    code-fold: false
     toc: true
 ---
 
@@ -38,20 +38,20 @@ The CSV will have many columns, but should at least include these three columns:
 - `so` – strikeouts
 
 
-```python
+```{python}
 import pandas as pd
 
 # Read in your downloaded MLB pitcher stats
-df = pd.read_csv("pitcher_stats.csv")
+df = pd.read_csv("../pitcher_stats.csv")
 
 # Take a quick look at the columns and first few rows
-print(df.columns)
+#print(df.columns) (Uncomment this line to check the column names!)
 df.head()
 ```
-
+## 2. Clean data and select pitcher
 You'll want to pick your pitcher and filter the dataset to only include that pitcher. Here you'll also want to sort the values by season.
 
-```python
+```{python}
 #Pick your pitcher
 pitcher_name = "Kershaw, Clayton"
 
@@ -62,3 +62,46 @@ pitcher_df = df.query("player_name == @pitcher_name").copy()
 pitcher_df["year"] = pitcher_df["year"].astype(int)
 pitcher_df = pitcher_df.sort_values("year")
 ```
+
+## 3. Plot strikeouts by season using matplotlib
+
+Now that the dataset looks how we want it to, we can start visualizing it on a plot. We will use the matplotlib library to do this. 
+
+```{python}
+import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots(figsize = (8, 5))
+
+#Here we create the plot by assigning season to the x-axis and strikeouts to the y-axis.
+ax.plot(
+  pitcher_df["year"],
+  pitcher_df["so"],
+  marker = "o",
+  linestyle = "-"
+)
+
+#It's important to set labels for our plot as many times variable names are not easily recognizable.
+ax.set_xticks(pitcher_df["year"])
+ax.set_title(f"Strikeouts per Season for {pitcher_name}")
+ax.set_xlabel("Season")
+ax.set_ylabel("Total Strikeouts")
+plt.tight_layout()
+plt.show()
+
+```
+
+## 4. Interpreting the plot
+
+Depending on which pitcher you have chosen, you might have different things stick out to you. For example:
+
+- Is there a season where the strikeout count jumps up or falls sharply?
+- Is your pitcher consistent or did they just have one breakout season?
+- Is your pitcher trending up or down over time?
+
+After seeing the trends in your data, you can explore even further. Another statistic that is frequently used is K/9, which refers to the number of strikeouts per 9 innings. This can be more accurate to a pitchers actual ability as it can account for time spent injured or not playing as a starter. By modifying the code above, it can be a simple change to create a new column with values obtained by dividing the strikeouts by the innings pitched, then multiplying by 9.
+
+## 5. Your turn! Pick your pitcher and stat
+
+Now that you've seen me go through this process for Clayton Kershaw, you can take this code and make your own plot using any pitcher and any statistic. This code can be copied and pasted directly into a python script and run to create your own custom stat-over-time plot.
+
+When you're finished, you should have a working python script, a simple, clean line plot using real MLB data, and a starting point for deeper sports analytics projects. The basic flow taught here, load in data -> filter -> group by desired stat -> plot data, can be used as a starting point for almost any dataset to visualize data. Good luck!
