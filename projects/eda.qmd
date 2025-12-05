@@ -6,9 +6,9 @@ format:
   html:
     code-fold: false
     toc: true
+    math: true
 ---
 
-# Strikeouts Over Time: Plotting Pitcher Trends
 
 Baseball has a stat for everything, from the well known "batting average" to more obscure statistics such as "OPS", "fWAR", and "ERA+". When all these different statistics are thrown together in a table, it can be hard to understand what exactly the jumble of numbers mean. In this tutorial, I will go through the process of turning raw data from a .csv file into interpretable charts where relationships between parameters of interest can be analyzed. 
 
@@ -46,10 +46,10 @@ df = pd.read_csv("../pitcher_stats.csv")
 
 # Take a quick look at the columns and first few rows
 #print(df.columns) (Uncomment this line to check the column names!)
-df.head()
+df[["player_name", "year", "so"]].head()
 ```
 ## 2. Clean data and select pitcher
-You'll want to pick your pitcher and filter the dataset to only include that pitcher. Here you'll also want to sort the values by season.
+You'll want to pick your pitcher and filter the dataset to only include that pitcher. Make sure to format your pitcher name as "Last name, First name". Here you'll also want to sort the values by season. This makes sure that the x-axis of your graph sees the year as a number and puts it in order instead of seeing it as categorical and potentially listing years out of order.
 
 ```{python}
 #Pick your pitcher
@@ -65,9 +65,12 @@ pitcher_df = pitcher_df.sort_values("year")
 
 ## 3. Plot strikeouts by season using matplotlib
 
-Now that the dataset looks how we want it to, we can start visualizing it on a plot. We will use the matplotlib library to do this. 
+Now that the dataset looks how we want it to, we can start visualizing it on a plot. We will use the matplotlib library to do this. Matplotlib has many useful functions for creating detailed graphs, it is usually seen as the default way to visualize data in Python. If you are wanting to make a more complicated graph or visualize multiple variables on the same graph, you can find [helpful documentation for matplotlib](https://matplotlib.org/stable/index.html) here!
 
 ```{python}
+#| fig-cap: "Strikeouts per season for Clayton Kershaw"
+#| fig-alt: "Line chart showing total strikeouts by year for Clayton Kershaw."
+
 import matplotlib.pyplot as plt
 
 fig, ax = plt.subplots(figsize = (8, 5))
@@ -92,13 +95,19 @@ plt.show()
 
 ## 4. Interpreting the plot
 
+Now that we can see Clayton Kershaw's strikeouts per year visually, it is easy to see that he was fairly consistent from the 2021-2023 seasons. In 2024, his number of strikeouts plummeted before recovering partly in 2025. My first question after seeing this graph is, what happened in 2024? A quick Google search reveals that he started the 2024 season on the injured list, started partway through the season, then ended early due to a new injury.
+
 Depending on which pitcher you have chosen, you might have different things stick out to you. For example:
 
 - Is there a season where the strikeout count jumps up or falls sharply?
 - Is your pitcher consistent or did they just have one breakout season?
 - Is your pitcher trending up or down over time?
 
-After seeing the trends in your data, you can explore even further. Another statistic that is frequently used is K/9, which refers to the number of strikeouts per 9 innings. This can be more accurate to a pitchers actual ability as it can account for time spent injured or not playing as a starter. By modifying the code above, it can be a simple change to create a new column with values obtained by dividing the strikeouts by the innings pitched, then multiplying by 9.
+After seeing the trends in your data, you can explore even further. Another statistic that is frequently used is K/9, which refers to the number of strikeouts per 9 innings. 
+$$
+K/9 = 9 \times \frac{\text{strikeouts}}{\text{innings pitched}}
+$$
+This can be more accurate to a pitchers actual ability as it can account for time spent injured or not playing as a starter. By modifying the code above, it can be a simple change to create a new column with values obtained by dividing the strikeouts by the innings pitched, then multiplying by 9.
 
 ## 5. Your turn! Pick your pitcher and stat
 
